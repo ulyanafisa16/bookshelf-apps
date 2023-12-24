@@ -166,6 +166,6 @@ main {
 }
 
 .book_shelf > .book_list > .book_item > .action > .red {
-    background-color: darkred;
+    background-color: rgb(194, 96, 96);
     color: white;
 }

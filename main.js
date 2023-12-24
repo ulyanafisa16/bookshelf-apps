@@ -109,10 +109,77 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       });
     }
+
+    function saveToLocalStorage() {
+      const incompleteBookshelfData = [];
+      const completeBookshelfData = [];
+  
+      // Mengumpulkan data dari rak yang belum selesai dan selesai dibaca
+      incompleteBookshelfList.querySelectorAll('.book_item').forEach(function (bookItem) {
+        const bookData = getBookData(bookItem);
+        incompleteBookshelfData.push(bookData);
+      });
+  
+      completeBookshelfList.querySelectorAll('.book_item').forEach(function (bookItem) {
+        const bookData = getBookData(bookItem);
+        completeBookshelfData.push(bookData);
+      });
+  
+      // Menyimpan data ke dalam localStorage
+      localStorage.setItem('incompleteBookshelfData', JSON.stringify(incompleteBookshelfData));
+      localStorage.setItem('completeBookshelfData', JSON.stringify(completeBookshelfData));
+    }
+  
+    function getBookData(bookItem) {
+      const title = bookItem.querySelector('h3').innerText;
+      const author = bookItem.querySelector('p:nth-child(2)').innerText.replace('Penulis: ', '');
+      const year = bookItem.querySelector('p:nth-child(3)').innerText.replace('Tahun: ', '');
+      const isComplete = bookItem.querySelector('button').innerText === 'Belum selesai di Baca';
+  
+      return { title, author, year, isComplete };
+    }
+  
+    function loadFromLocalStorage() {
+      const incompleteBookshelfData = JSON.parse(localStorage.getItem('incompleteBookshelfData')) || [];
+      const completeBookshelfData = JSON.parse(localStorage.getItem('completeBookshelfData')) || [];
+  
+      // Menampilkan data yang telah disimpan dari localStorage
+      incompleteBookshelfData.forEach(function (bookData) {
+        addBookToShelf(bookData.title, bookData.author, bookData.year, bookData.isComplete);
+      });
+  
+      completeBookshelfData.forEach(function (bookData) {
+        addBookToShelf(bookData.title, bookData.author, bookData.year, bookData.isComplete);
+      });
+    }
+  
+    function saveToLocalStorage() {
+      const incompleteBookshelfData = [];
+      const completeBookshelfData = [];
+  
+      // Mengumpulkan data dari rak yang belum selesai dan selesai dibaca
+      incompleteBookshelfList.querySelectorAll('.book_item').forEach(function (bookItem) {
+        const bookData = getBookData(bookItem);
+        incompleteBookshelfData.push(bookData);
+      });
+  
+      completeBookshelfList.querySelectorAll('.book_item').forEach(function (bookItem) {
+        const bookData = getBookData(bookItem);
+        completeBookshelfData.push(bookData);
+      });
+  
+      // Menyimpan data ke dalam localStorage
+      localStorage.setItem('incompleteBookshelfData', JSON.stringify(incompleteBookshelfData));
+      localStorage.setItem('completeBookshelfData', JSON.stringify(completeBookshelfData));
+    }
+  
+    // Memuat data dari localStorage saat halaman pertama kali dimuat
+    loadFromLocalStorage();
   
     inputBookForm.addEventListener('submit', function (e) {
       e.preventDefault();
       addBook();
+      saveToLocalStorage();
     });
   
     searchBookForm.addEventListener('submit', function (e) {
@@ -123,3 +190,12 @@ document.addEventListener('DOMContentLoaded', function () {
     searchSubmit.addEventListener('click', searchBook);
   });
   
+  // Pemeriksaan apakah data 'incompleteBookshelfData' ada di localStorage
+  const incompleteBookshelfData = localStorage.getItem('incompleteBookshelfData');
+  if (incompleteBookshelfData !== null) {
+    // Data ditemukan di localStorage, lakukan sesuatu...
+    console.log('Data incompleteBookshelfData ada di localStorage:', incompleteBookshelfData);
+  } else {
+    // Data tidak ditemukan di localStorage
+    console.log('Data incompleteBookshelfData tidak ada di localStorage');
+  }
